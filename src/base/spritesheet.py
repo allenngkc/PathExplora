@@ -8,7 +8,7 @@ class SpriteSheet:
     def __init__(self, object, filename):
         self.filename = filename
         self.object = object
-        self.sprite_sheet = pygame.image.load(os.path.join(assets_dir, f"{object}\\{filename}.png")).convert()
+        self.sprite_sheet = pygame.image.load(os.path.join(assets_dir, f"{object}\\{filename}.png")).convert_alpha()
 
     # Returns the sprite to the screen given current cycle index (x, y, w, h) from parse_sprite()
     def get_sprite(self, x, y, w, h):
@@ -26,7 +26,6 @@ class SpriteSheet:
 
         characters_keys = list(data["frames"].keys())
         frame_obj = data["frames"][characters_keys[index]]["frame"]
-        print(frame_obj["x"])
         return self.get_sprite(frame_obj["x"], frame_obj["y"], frame_obj["w"], frame_obj["h"])
 
 
