@@ -1,5 +1,10 @@
-import pygame
+import pygame, os
+from base.sprites import Generic
 from player import Player
+
+# Obtain file system directories
+current_dir = os.path.dirname(__file__)
+assets_dir = os.path.join(current_dir, "..\\assets")
 
 class Level:
     def __init__(self):
@@ -8,6 +13,9 @@ class Level:
         self.setup()
 
     def setup(self):
+        Generic(pos=(0,0),
+                surf=pygame.image.load(os.path.join(assets_dir, 'world/ground.png')).convert_alpha(),
+                groups=self.all_sprites)
         self.player = Player((512, 384), self.all_sprites)
 
     def run(self, dt):
