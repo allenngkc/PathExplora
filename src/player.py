@@ -1,4 +1,5 @@
 import pygame
+from settings import *
 from base.spritesheet import SpriteSheet
 
 class Player(pygame.sprite.Sprite):
@@ -11,10 +12,11 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2(0, 0)
         self.pos = pygame.math.Vector2(self.rect.center)
         self.speed = 275
-        
 
         self.display_surface = pygame.display.get_surface()
-
+        
+        # Rendering dimension
+        self.z = LAYERS['main']
         
         # Player Status
         self.status = 'down'
