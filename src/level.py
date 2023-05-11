@@ -3,6 +3,9 @@ from base.sprites import Generic
 from player import Player
 from settings import *
 
+# Reading Tiled Map Editor's TMX maps
+from pytmx.util_pygame import load_pygame
+
 # Obtain file system directories
 current_dir = os.path.dirname(__file__)
 assets_dir = os.path.join(current_dir, "..\\assets")
@@ -14,12 +17,24 @@ class Level:
         self.setup()
 
     def setup(self):
+        # 3D world data
+        tmx_data = load_pygame(os.path.join(assets_dir, 'world\\data\\map.tmx'))
+        
+        for layer in ['HouseFloor', 'HouseFurnitureBottom']:
+            for x,y,surf in tmx_data.get_layer_by_name(layer).tiles():
+                Generic((x * TILE_SIZE, y * TILE_SIZE), surf, self.all_sprites, LAYERS['house bottom'])
+        
+        for layer in ['HouseWalls', 'HouseFurnitureTop']:
+            for x,y,surf in tmx_data.get_layer_by_name(layer).tiles():
+                Generic((x * TILE_SIZE, y * TILE_SIZE), surf, self.all_sprites, LAYERS['main'])
+
+
+        self.player = Player((512, 384), self.all_sprites)
         Generic(pos=(0,0),
                 surf=pygame.image.load(os.path.join(assets_dir, 'world/ground.png')).convert_alpha(),
                 groups=self.all_sprites,
                 z=LAYERS['ground']
                 )
-        self.player = Player((512, 384), self.all_sprites)
 
     def run(self, dt):
         self.display_surface.fill('black')

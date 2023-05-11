@@ -1,5 +1,6 @@
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 600
+TILE_SIZE = 64
 
 LAYERS = {
     'water': 0,
