@@ -42,7 +42,7 @@ class Level:
         # Importing all the map layers
         import_map_layers(['HouseFloor', 'HouseFurnitureBottom'], 'house bottom')
         import_map_layers(['HouseWalls', 'HouseFurnitureTop'], 'house top')
-        import_map_layers(['Fence'], 'main', True) 
+        import_map_layers(['Fence'], 'main') 
         import_map_layers(['Hills'], 'main')
         import_map_layers(['Forest Grass', 'Outside Decoration'], 'ground plant')
         import_map_layers(['Ground'], 'ground')
