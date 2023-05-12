@@ -10,8 +10,8 @@ LAYERS = {
     'rain floor': 4,
     'house bottom': 5,
     'ground plant': 6,
-    'main': 7,
-    'house top': 8,
+    'house top': 7,
+    'main': 8,
     'fruit': 9,
     'rain drops': 10
 }

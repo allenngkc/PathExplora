@@ -50,7 +50,7 @@ class Level:
 
         # Transparent collision tiles
         for x, y, surf in tmx_data.get_layer_by_name('Collision').tiles():
-            Generic((x * TILE_SIZE, y * TILE_SIZE), pygame.Surface((TILE_SIZE, TILE_SIZE)), [self.all_sprites, self.collision_sprites])
+            Generic((x * TILE_SIZE, y * TILE_SIZE), pygame.Surface((TILE_SIZE, TILE_SIZE)), self.collision_sprites)
 
         # Converts tmx_data objects to game world
         for obj in tmx_data.get_layer_by_name('Decoration'):
