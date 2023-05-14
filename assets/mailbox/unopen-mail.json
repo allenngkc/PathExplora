@@ -1,0 +1,52 @@
+{"frames": {
+
+"mailbox-0.png":
+{
+	"frame": {"x":1,"y":1,"w":104,"h":170},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":104,"h":170},
+	"sourceSize": {"w":104,"h":170}
+},
+"mailbox-3.png":
+{
+	"frame": {"x":1,"y":173,"w":104,"h":170},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":104,"h":170},
+	"sourceSize": {"w":104,"h":170}
+},
+"mailbox-5.png":
+{
+	"frame": {"x":1,"y":345,"w":104,"h":170},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":104,"h":170},
+	"sourceSize": {"w":104,"h":170}
+},
+"mailbox-6.png":
+{
+	"frame": {"x":1,"y":517,"w":104,"h":170},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":104,"h":170},
+	"sourceSize": {"w":104,"h":170}
+},
+"mailbox-7.png":
+{
+	"frame": {"x":1,"y":689,"w":104,"h":170},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":104,"h":170},
+	"sourceSize": {"w":104,"h":170}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "unopen-mail.png",
+	"format": "RGBA8888",
+	"size": {"w":106,"h":860},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:ef3026ac1c5d0faf0ca0cfa58fa7c67e:0e62d4322591ed88af429589cf52a055:ec5b3ad2a6989f9a7ea9986768b3bd6d$"
+}
+}

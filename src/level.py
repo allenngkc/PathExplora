@@ -1,5 +1,5 @@
 import pygame, os
-from base.sprites import Generic, Decorations, Trees
+from base.sprites import Generic, Decorations, Trees, Mailbox
 from player import Player
 from settings import *
 
@@ -41,7 +41,7 @@ class Level:
 
         # Importing all the map layers
         import_map_layers(['HouseFloor', 'HouseFurnitureBottom'], 'house bottom')
-        import_map_layers(['HouseWalls', 'HouseFurnitureTop'], 'house top')
+        import_map_layers(['HouseWalls', 'HouseFurnitureTop'], 'main')
         import_map_layers(['Fence'], 'main') 
         import_map_layers(['Hills'], 'main')
         import_map_layers(['Forest Grass', 'Outside Decoration'], 'ground plant')
@@ -62,6 +62,14 @@ class Level:
         for obj in tmx_data.get_layer_by_name('Player'):
             if obj.name == 'Start':
                 self.player = Player((obj.x, obj.y), self.all_sprites, self.collision_sprites)
+
+
+
+        # Spawning mailbox object and starting the animation
+        for obj in tmx_data.get_layer_by_name('Mailbox'):
+            Mailbox((obj.x, obj.y), obj.image, self.all_sprites)
+
+            
 
     def run(self, dt):
         self.display_surface.fill('black')

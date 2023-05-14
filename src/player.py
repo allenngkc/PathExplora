@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
 
     # Initialize the animations from spritesheets
     def init_anim(self):
-        self.sprites = [SpriteSheet("player", "player-up"), SpriteSheet("player", "player-down"),
+        self.sprite_sheets = [SpriteSheet("player", "player-up"), SpriteSheet("player", "player-down"),
                         SpriteSheet("player", "player-left"), SpriteSheet("player", "player-right")]
 
         self.animations = {'up': [], 'down': [], 'left': [], 'right': []}
@@ -39,10 +39,10 @@ class Player(pygame.sprite.Sprite):
 
         cur_dir = 0 # Looping cur_dir to indicate which direction of sprites apply to animation
 
-        for sprite in self.sprites:
+        for sprite_sheet in self.sprite_sheets:
             for i in range(0, 4):
                 # Appending sprite to self.animations by calling parse_sprite() in from spitesheet.py
-                self.animations[direction_keys[cur_dir]].append(sprite.parse_sprite(i))
+                self.animations[direction_keys[cur_dir]].append(sprite_sheet.parse_sprite(i))
 
             cur_dir += 1
 
