@@ -13,5 +13,7 @@ LAYERS = {
     'main': 7,
     'house top': 8,
     'fruit': 9,
-    'rain drops': 10
+    'ui': 10,
+    'ui text': 11
+
 }

@@ -1,5 +1,5 @@
 import pygame, os
-from base.sprites import Generic, Decorations, Trees, Mailbox
+from base.sprites import Generic, Decorations, Trees, Mailbox, MailboxTrigger, Base
 from player import Player
 from settings import *
 
@@ -21,12 +21,13 @@ class Level:
         # 3D world data
         tmx_data = load_pygame(os.path.join(assets_dir, 'world\\data\\map.tmx'))
 
-        self.load_tmx_data(tmx_data)
+        # Handling mailbox overlay when user collides with the mailbox, initializes the objects and groups needed
+        button_obj = tmx_data.get_layer_by_name('MailboxButton')[0]
+        buttonFont = pygame.font.Font(os.path.join(assets_dir, 'world\\m6x11.ttf'), 16)
+        self.ui_sprites = MailboxGroup(button_obj.x, button_obj.y, button_obj.image, buttonFont, 'F')
 
-        Generic(pos=(0,0),
-                surf=pygame.image.load(os.path.join(assets_dir, 'world/ground.png')).convert_alpha(),
-                groups=self.all_sprites,
-                z=LAYERS['ground'])
+        self.load_tmx_data(tmx_data)
+        
         
     def load_tmx_data(self, tmx_data):
 
@@ -40,6 +41,7 @@ class Level:
                         Generic((x * TILE_SIZE, y * TILE_SIZE), surf, [self.all_sprites, self.collision_sprites], LAYERS[layer_settings])
 
         # Importing all the map layers
+        import_map_layers(['Ground'], 'ground')
         import_map_layers(['HouseFloor', 'HouseFurnitureBottom'], 'house bottom')
         import_map_layers(['HouseWalls', 'HouseFurnitureTop'], 'main')
         import_map_layers(['Fence'], 'main') 
@@ -69,13 +71,27 @@ class Level:
         for obj in tmx_data.get_layer_by_name('Mailbox'):
             Mailbox((obj.x, obj.y), obj.image, self.all_sprites)
 
-            
+        # Mailbox Trigger as a collision check object placed within the mailbox position
+        for x, y, surf in tmx_data.get_layer_by_name('MailboxTrigger').tiles():
+            MailboxTrigger((x * TILE_SIZE, y * TILE_SIZE), 
+                           pygame.Surface((TILE_SIZE, TILE_SIZE), pygame.SRCALPHA), self.ui_sprites, self.player)
 
+            
     def run(self, dt):
         self.display_surface.fill('black')
         self.all_sprites.customize_draw(self.player)
         self.all_sprites.update(dt)
 
+        self.ui_sprites.customize_draw(self.player)
+        self.ui_sprites.update(dt)
+
+
+""" 
+CameraGroup class exists to check for player movement to match with objects rendering
+By constantly being called on update functions, through customize_draw(), when evaulating
+player's movement and computing the offsets xy positions. This class is able to render
+objects mostly from tmx_data to the game world. 
+"""
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
@@ -83,24 +99,46 @@ class CameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
 
     def customize_draw(self, player):
+        # Computing the offsets
         self.offset.x = player.rect.centerx - SCREEN_WIDTH / 2
         self.offset.y = player.rect.centery - SCREEN_HEIGHT / 2
 
-        sprites_obj = {'0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': [], '9': [], '10': []}
-
-        # Saving all sprites to sprites_obj and sort to display them in order
-        # for sprite in self.sprites():
-        #     sprites_obj[str(sprite.z)].append(sprite)
-            
-        # for layer in sprites_obj:
-        #     for sprite in sprites_obj[layer]:
-        #         offset_rect = sprite.rect.copy()
-        #         offset_rect.center -= self.offset
-        #         self.display_surface.blit(sprite.image, offset_rect)
-
         for layer in LAYERS.values():
+            # Using the sorted and lambda function here to determine the order of rendering the objects
             for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
                 if sprite.z == layer:
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     self.display_surface.blit(sprite.image, offset_rect)
+
+"""
+Mailbox Group specially exists to check for collison between Player and MailboxTrigger,
+If collided, customize_draw() will blit self.button_overlay, oppositely, not blitting if
+Not colliding, one potential problem for this class would be the class arguments, as
+It might not be a good practice ask for specfic arguments from a class. But in this case
+This class has only one usage.
+"""
+class MailboxGroup(CameraGroup):
+    def __init__(self, bx, by, bimage, bfont, btext):
+        super().__init__()
+        self.bx = bx
+        self.by = by
+        self.image = bimage
+        self.font = bfont
+        self.text = btext
+
+        self.button_overlay = Base((bx, by), bimage)
+
+    def customize_draw(self, player):
+        self.offset.x = player.rect.centerx - SCREEN_WIDTH / 2
+        self.offset.y = player.rect.centery - SCREEN_HEIGHT / 2
+
+        # Abundancy code here, don't really need to iterate all the layers and sprites, but it works
+        for layer in LAYERS.values():
+            for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
+                if sprite.z == layer:
+                    if not player.hitbox.colliderect(sprite.hitbox):
+                        continue
+                    offset_rect = self.button_overlay.rect.copy()
+                    offset_rect.center -= self.offset
+                    self.display_surface.blit(self.button_overlay.image, offset_rect)
