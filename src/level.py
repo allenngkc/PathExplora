@@ -1,6 +1,7 @@
 import pygame, os
 from base.sprites import Generic, Decorations, Trees, Mailbox, MailboxTrigger, Base
 from player import Player
+from overlay import Overlay
 from settings import *
 
 # Reading Tiled Map Editor's TMX maps
@@ -16,6 +17,9 @@ class Level:
         self.all_sprites = CameraGroup()
         self.collision_sprites = pygame.sprite.Group()
         self.setup()
+        # self.overlay = Overlay(self.player)
+
+        
 
     def setup(self):
         # 3D world data
@@ -24,7 +28,7 @@ class Level:
         # Handling mailbox overlay when user collides with the mailbox, initializes the objects and groups needed
         button_obj = tmx_data.get_layer_by_name('MailboxButton')[0]
         buttonFont = pygame.font.Font(os.path.join(assets_dir, 'world\\m6x11.ttf'), 16)
-        self.ui_sprites = MailboxGroup(button_obj.x, button_obj.y, button_obj.image, buttonFont, 'F')
+        self.ui_sprites = MailboxGroup(button_obj.x, button_obj.y, button_obj.image, self.all_sprites)
 
         self.load_tmx_data(tmx_data)
         
@@ -85,6 +89,8 @@ class Level:
         self.ui_sprites.customize_draw(self.player)
         self.ui_sprites.update(dt)
 
+        # self.overlay.display()
+
 
 """ 
 CameraGroup class exists to check for player movement to match with objects rendering
@@ -119,13 +125,15 @@ It might not be a good practice ask for specfic arguments from a class. But in t
 This class has only one usage.
 """
 class MailboxGroup(CameraGroup):
-    def __init__(self, bx, by, bimage, bfont, btext):
+    def __init__(self, bx, by, bimage, camera_group_ref):
         super().__init__()
         self.bx = bx
         self.by = by
         self.image = bimage
-        self.font = bfont
-        self.text = btext
+        self.clicked = False
+        
+        # Getting the current camera group reference to display images
+        self.camera_group_ref = camera_group_ref
 
         self.button_overlay = Base((bx, by), bimage)
 
@@ -137,8 +145,21 @@ class MailboxGroup(CameraGroup):
         for layer in LAYERS.values():
             for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
                 if sprite.z == layer:
-                    if not player.hitbox.colliderect(sprite.hitbox):
+                    if not player.hitbox.colliderect(sprite.hitbox) or self.clicked:
                         continue
+
+                    # Player is colliding with object
                     offset_rect = self.button_overlay.rect.copy()
                     offset_rect.center -= self.offset
                     self.display_surface.blit(self.button_overlay.image, offset_rect)
+                    self.show_dialogue()
+
+    def show_dialogue(self):
+        # If key is pressed, then show dialogue to user
+        dialogue_surf = pygame.image.load(os.path.join(assets_dir, 'ui\\dialog.png')).convert_alpha()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_f]:
+            self.clicked = True
+            Generic((self.bx-30, self.by-80), dialogue_surf, self.camera_group_ref, LAYERS['ui'])
+

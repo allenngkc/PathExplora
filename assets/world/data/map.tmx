@@ -38,7 +38,6 @@
  <tileset firstgid="1679" source="Tilesets/signs.tsx"/>
  <tileset firstgid="1703" source="Tilesets/mailbox-0.tsx"/>
  <tileset firstgid="1704" source="Tilesets/Icon Buttons Spritesheet.tsx"/>
- <tileset firstgid="1794" source="Tilesets/Icon Buttons Spritesheet.tsx"/>
  <layer id="2" name="Water" width="50" height="40">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,171,171,171,171,171,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -682,7 +681,7 @@
 </data>
  </layer>
  <objectgroup id="29" name="MailboxButton">
-  <object id="410" gid="1794" x="1078.67" y="1293.33" width="64" height="64"/>
+  <object id="410" gid="1704" x="1078.67" y="1293.33" width="64" height="64"/>
  </objectgroup>
  <layer id="27" name="Collision" width="50" height="40">
   <data encoding="csv">
