@@ -17,7 +17,7 @@ class Pathfinder:
 
     def setup(self):
         # 3D world data
-        tmx_data = load_pygame(os.path.join(assets_dir, 'world\\data\\map.tmx'))
+        tmx_data = load_pygame(os.path.join(assets_dir, 'pathfinder\\pathfinder.tmx'))
         self.load_tmx_data(tmx_data)
         
         
@@ -27,24 +27,15 @@ class Pathfinder:
         def import_map_layers(layers, layer_settings, collision=False):
             for layer in layers:
                 for x,y,surf in tmx_data.get_layer_by_name(layer).tiles():
-                    Generic((x * TILE_SIZE, y * TILE_SIZE), surf, self.all_sprites, LAYERS[layer_settings])
+                    Generic((x * PATH_FINDER_TILE_SIZE, y * PATH_FINDER_TILE_SIZE), surf, self.all_sprites, LAYERS[layer_settings])
 
         # Importing all the map layers
-        import_map_layers(['Ground'], 'ground')
-        import_map_layers(['HouseFloor', 'HouseFurnitureBottom'], 'house bottom')
-        import_map_layers(['HouseWalls', 'HouseFurnitureTop'], 'main')
-        import_map_layers(['Fence'], 'main') 
-        import_map_layers(['Hills'], 'main')
-        import_map_layers(['Forest Grass', 'Outside Decoration'], 'ground plant')
-        import_map_layers(['Ground'], 'ground')
-        import_map_layers(['Water'], 'water')
+        import_map_layers(['ground'], 'ground')
+        import_map_layers(['hills'], 'main') 
+        import_map_layers(['forest grass'], 'ground plant')
 
         # Converts tmx_data objects to game world
-        for obj in tmx_data.get_layer_by_name('Decoration'):
-            Decorations((obj.x, obj.y), obj.image, self.all_sprites, LAYERS['main'])
-        for obj in tmx_data.get_layer_by_name('Trees'):
-            Trees((obj.x, obj.y), obj.image, self.all_sprites, obj.name)
-        for obj in tmx_data.get_layer_by_name('Objects'):
+        for obj in tmx_data.get_layer_by_name('objects'):
             Trees((obj.x, obj.y), obj.image, self.all_sprites, obj.name)
 
         init_obj = tmx_data.get_layer_by_name('PathfindingStart')[0]

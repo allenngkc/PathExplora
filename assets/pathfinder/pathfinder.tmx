@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="24" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="1">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="24" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="18">
  <tileset firstgid="1" source="Tilesets/Grass tile layers.tsx"/>
+ <tileset firstgid="78" source="Tilesets/Hills.tsx"/>
+ <tileset firstgid="114" source="Tilesets/Grass.tsx"/>
+ <tileset firstgid="194" source="Tilesets/Fences.tsx"/>
+ <tileset firstgid="210" source="Tilesets/Objects_Small.tsx"/>
+ <tileset firstgid="218" source="Tilesets/signs.tsx"/>
  <layer id="1" name="ground" width="24" height="20">
   <data encoding="csv">
 13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,
@@ -49,4 +54,49 @@
 0,0,0,0,60,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <layer id="3" name="hills" width="24" height="20">
+  <data encoding="csv">
+0,0,0,0,87,203,208,208,208,208,208,208,208,208,208,208,208,208,205,0,0,0,0,0,
+0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,145,
+0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,145,169,
+0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,145,169,0,
+95,92,92,92,93,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,145,169,0,0,
+87,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,155,0,0,0,
+87,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,155,0,0,0,
+87,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,155,0,0,0,
+87,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,155,0,0,0,
+87,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,155,0,0,0,
+93,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,155,0,0,0,
+0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,155,0,0,0,
+0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,155,0,0,0,
+0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,155,0,0,0,
+166,166,166,166,167,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,155,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,145,146,146,146,169,0,0,0,
+0,0,0,0,0,0,0,0,236,0,0,0,0,0,0,0,155,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,155,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,155,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="4" name="objects">
+  <object id="1" gid="215" x="44.5" y="239" width="48" height="62"/>
+  <object id="2" gid="216" x="62" y="253" width="28" height="58"/>
+  <object id="3" gid="214" x="85.5" y="210" width="26" height="26"/>
+  <object id="5" gid="214" x="75" y="264" width="26" height="26"/>
+  <object id="6" gid="217" x="34" y="336" width="32" height="30"/>
+  <object id="7" gid="217" x="88.5" y="431.5" width="32" height="30"/>
+  <object id="8" gid="217" x="82.5" y="489.5" width="32" height="30"/>
+  <object id="9" gid="215" x="690.667" y="60.3333" width="48" height="62"/>
+  <object id="10" gid="215" x="725.333" y="168.333" width="48" height="62"/>
+  <object id="11" gid="215" x="610.667" y="48.3333" width="48" height="62"/>
+  <object id="12" gid="216" x="730" y="243.667" width="28" height="58"/>
+  <object id="13" gid="217" x="557.333" y="577.667" width="32" height="30"/>
+  <object id="14" gid="215" x="570.667" y="564.333" width="48" height="62"/>
+  <object id="15" gid="214" x="579" y="577" width="26" height="26"/>
+ </objectgroup>
+ <objectgroup id="5" name="PathfindingStart">
+  <object id="17" name="Spawn" x="402.333" y="305">
+   <point/>
+  </object>
+ </objectgroup>
 </map>

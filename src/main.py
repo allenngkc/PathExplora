@@ -10,7 +10,7 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Path Explora")
         self.clock = pygame.time.Clock()
-        self.scene_manager = SceneManager(Level())
+        self.scene_manager = SceneManager(Pathfinder())
 
     def run(self):
         while True:
