@@ -1,0 +1,76 @@
+import pygame, os
+from base.sprites import Generic, Decorations, Trees
+from settings import *
+
+# Reading Tiled Map Editor's TMX maps
+from pytmx.util_pygame import load_pygame
+
+# Obtain file system directories
+current_dir = os.path.dirname(__file__)
+assets_dir = os.path.join(current_dir, "..\\..\\assets")
+
+class Pathfinder:
+    def __init__(self):
+        self.display_surface = pygame.display.get_surface()
+        self.all_sprites = WorldGroup()
+        self.setup()
+
+    def setup(self):
+        # 3D world data
+        tmx_data = load_pygame(os.path.join(assets_dir, 'world\\data\\map.tmx'))
+        self.load_tmx_data(tmx_data)
+        
+        
+    def load_tmx_data(self, tmx_data):
+
+        # Converts tmx_data layers to game world
+        def import_map_layers(layers, layer_settings, collision=False):
+            for layer in layers:
+                for x,y,surf in tmx_data.get_layer_by_name(layer).tiles():
+                    Generic((x * TILE_SIZE, y * TILE_SIZE), surf, self.all_sprites, LAYERS[layer_settings])
+
+        # Importing all the map layers
+        import_map_layers(['Ground'], 'ground')
+        import_map_layers(['HouseFloor', 'HouseFurnitureBottom'], 'house bottom')
+        import_map_layers(['HouseWalls', 'HouseFurnitureTop'], 'main')
+        import_map_layers(['Fence'], 'main') 
+        import_map_layers(['Hills'], 'main')
+        import_map_layers(['Forest Grass', 'Outside Decoration'], 'ground plant')
+        import_map_layers(['Ground'], 'ground')
+        import_map_layers(['Water'], 'water')
+
+        # Converts tmx_data objects to game world
+        for obj in tmx_data.get_layer_by_name('Decoration'):
+            Decorations((obj.x, obj.y), obj.image, self.all_sprites, LAYERS['main'])
+        for obj in tmx_data.get_layer_by_name('Trees'):
+            Trees((obj.x, obj.y), obj.image, self.all_sprites, obj.name)
+        for obj in tmx_data.get_layer_by_name('Objects'):
+            Trees((obj.x, obj.y), obj.image, self.all_sprites, obj.name)
+
+        init_obj = tmx_data.get_layer_by_name('PathfindingStart')[0]
+        self.x = init_obj.x
+        self.y = init_obj.y
+
+    def run(self, dt):
+        self.display_surface.fill('black')
+        self.all_sprites.customize_draw(self.x, self.y)
+        self.all_sprites.update(dt)
+
+
+class WorldGroup(pygame.sprite.Group):
+    def __init__(self):
+        super().__init__()
+        self.display_surface = pygame.display.get_surface()
+        self.offset = pygame.math.Vector2()
+
+    def customize_draw(self, viewx, viewy):
+        self.offset.x = viewx - SCREEN_WIDTH / 2
+        self.offset.y = viewy - SCREEN_HEIGHT / 2
+
+        for layer in LAYERS.values():
+            # Using the sorted and lambda function here to determine the order of rendering the objects
+            for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
+                if sprite.z == layer:
+                    offset_rect = sprite.rect.copy()
+                    offset_rect.center -= self.offset
+                    self.display_surface.blit(sprite.image, offset_rect)

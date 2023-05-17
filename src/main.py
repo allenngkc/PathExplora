@@ -1,6 +1,8 @@
 import pygame, sys
-from level import Level
+from scenes.level import Level
+from scenes.pathfinder import Pathfinder
 from settings import *
+from base.scene_manager import SceneManager
 
 class Game:
     def __init__(self):
@@ -8,8 +10,7 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Path Explora")
         self.clock = pygame.time.Clock()
-
-        self.level = Level()
+        self.scene_manager = SceneManager(Level())
 
     def run(self):
         while True:
@@ -19,7 +20,7 @@ class Game:
                     sys.exit()
 
             dt = self.clock.tick() / 1000
-            self.level.run(dt)
+            self.scene_manager.render(dt)
             pygame.display.update()
 
 

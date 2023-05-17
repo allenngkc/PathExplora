@@ -9,7 +9,7 @@ from pytmx.util_pygame import load_pygame
 
 # Obtain file system directories
 current_dir = os.path.dirname(__file__)
-assets_dir = os.path.join(current_dir, "..\\assets")
+assets_dir = os.path.join(current_dir, "..\\..\\assets")
 
 class Level:
     def __init__(self):
