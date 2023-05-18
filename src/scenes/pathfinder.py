@@ -22,7 +22,6 @@ class Pathfinder:
         
         
     def load_tmx_data(self, tmx_data):
-
         # Converts tmx_data layers to game world
         def import_map_layers(layers, layer_settings, collision=False):
             for layer in layers:
@@ -46,7 +45,15 @@ class Pathfinder:
         self.display_surface.fill('black')
         self.all_sprites.customize_draw(self.x, self.y)
         self.all_sprites.update(dt)
+        self.draw_grid()
 
+    # Draw gridlines to user
+    def draw_grid(self):
+        blockSize = 30
+        for x in range(270, 724, blockSize):
+            for y in range(30, 510, blockSize):
+                rect = pygame.Rect(x, y, blockSize, blockSize)
+                pygame.draw.rect(self.display_surface, (255, 255, 255), rect, 1)
 
 class WorldGroup(pygame.sprite.Group):
     def __init__(self):
