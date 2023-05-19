@@ -1,5 +1,6 @@
 import pygame, os
 from base.sprites import Generic, Decorations, Trees
+from base.grid_system import GridSystem
 from settings import *
 
 # Reading Tiled Map Editor's TMX maps
@@ -19,6 +20,7 @@ class Pathfinder:
         # 3D world data
         tmx_data = load_pygame(os.path.join(assets_dir, 'pathfinder\\pathfinder.tmx'))
         self.load_tmx_data(tmx_data)
+        self.grid_system = GridSystem(16, 16)
         
         
     def load_tmx_data(self, tmx_data):
@@ -44,8 +46,9 @@ class Pathfinder:
     def run(self, dt):
         self.display_surface.fill('black')
         self.all_sprites.customize_draw(self.x, self.y)
-        self.all_sprites.update(dt)
+        self.all_sprites.update(dt)        
         self.draw_grid()
+        self.grid_system.display_grids()
 
     # Draw gridlines to user
     def draw_grid(self):
