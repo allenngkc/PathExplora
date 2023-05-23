@@ -49,14 +49,16 @@ class Pathfinder:
         self.all_sprites.update(dt)        
         self.draw_grid()
         self.grid_system.display_grids()
+        self.grid_system.check_input()
 
     # Draw gridlines to user
     def draw_grid(self):
-        blockSize = 30
-        for x in range(270, 724, blockSize):
-            for y in range(30, 510, blockSize):
-                rect = pygame.Rect(x, y, blockSize, blockSize)
-                pygame.draw.rect(self.display_surface, (255, 255, 255), rect, 1)
+        pass
+        # blockSize = 30
+        # for x in range(270, 724, blockSize):
+        #     for y in range(30, 510, blockSize):
+        #         rect = pygame.Rect(x, y, blockSize, blockSize)
+        #         pygame.draw.rect(self.display_surface, (255, 255, 255), rect, 1)
 
 class WorldGroup(pygame.sprite.Group):
     def __init__(self):
