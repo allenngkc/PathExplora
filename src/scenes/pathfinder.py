@@ -1,6 +1,7 @@
 import pygame, os
-from base.sprites import Generic, Decorations, Trees
+from base.sprites import Generic, Trees
 from base.grid_system import GridSystem
+from overlay import Overlay
 from settings import *
 
 # Reading Tiled Map Editor's TMX maps
@@ -14,6 +15,7 @@ class Pathfinder:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
         self.all_sprites = WorldGroup()
+        self.overlay = Overlay()
         self.setup()
 
     def setup(self):
@@ -50,6 +52,7 @@ class Pathfinder:
         self.draw_grid()
         self.grid_system.display_grids()
         self.grid_system.check_input()
+        self.overlay.display()
 
     # Draw gridlines to user
     def draw_grid(self):

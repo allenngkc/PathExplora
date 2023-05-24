@@ -55,7 +55,7 @@ class GridCell:
         self.x = x
         self.y = y
         self.surface = pygame.Surface((GRID_SIZE, GRID_SIZE), pygame.SRCALPHA)
-        self.rect   = self.surface.get_rect(topleft=(x,y))
+        self.rect = self.surface.get_rect(topleft=(x,y))
         self.display_surface = pygame.display.get_surface()
         
         # Each grid defaults to be a empty cell
