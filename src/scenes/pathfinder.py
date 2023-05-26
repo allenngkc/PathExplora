@@ -15,13 +15,14 @@ class Pathfinder:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
         self.all_sprites = WorldGroup()
-        self.overlay = Overlay()
         self.setup()
 
     def setup(self):
         # 3D world data
         tmx_data = load_pygame(os.path.join(assets_dir, 'pathfinder\\pathfinder.tmx'))
         self.load_tmx_data(tmx_data)
+        
+        self.overlay = Overlay()
         self.grid_system = GridSystem(16, 16)
         
         
@@ -53,6 +54,7 @@ class Pathfinder:
         self.grid_system.check_input()
         self.draw_grid() 
         self.overlay.update()
+        self.grid_system.draw_algo_text()
 
     # Draw gridlines to user
     def draw_grid(self):

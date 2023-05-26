@@ -2,6 +2,8 @@ import pygame, os
 from pygame import Color
 from overlay import Block
 from settings import *
+from pathfinding_algo import PathfindingAlgorithms
+
 
 # Obtain file system directories
 current_dir = os.path.dirname(__file__)
@@ -31,7 +33,10 @@ class GridSystem:
         self.prev_start = []
         self.prev_end = []
 
-
+        self.cur_start = []
+        self.cur_end = []
+        
+        # Store path data for backend
         self.path_data = []
         for i in range(16):
             row = [0] * 16
@@ -44,21 +49,60 @@ class GridSystem:
                 inner_arr.append(GridCell(GRID_INIT_X + c*GRID_SIZE,GRID_INIT_Y + r*GRID_SIZE, self.img))
             self.grids.append(inner_arr)    
 
+        # Path finding mechanism
+        self.pathalgo_selection = [Block(610, 538), Block(735, 538)]
+
+        self.algo_index = 0
+        self.algo_list = ["DFS", "BFS", "Dijkstra", "A*"]
+
+        self.cur_algo = "DFS"
+        self.algo_font = pygame.font.Font(os.path.join(assets_dir, 'world\\m6x11.ttf'), 32)
+        self.algo_text_surface = self.algo_font.render(self.cur_algo, True, (0,0,0))
+        self.display_surface = pygame.display.get_surface()
+
+        self.pathfinding_algo = PathfindingAlgorithms(self.path_data)
+
+    # This needs a independent function due to rendering order issues
+    def draw_algo_text(self):
+        self.display_surface.blit(self.algo_text_surface, (666,542))
+
+    # Bad naming convention, treatingw this as an update function
     def display_grids(self):
         for i in self.grids:
             for j in i:
                 j.draw()
 
+        # Drawing the cursor triggers
         for block in self.blocks:
             block.draw()
 
         for de in self.start_end:
             de.draw()
+
+        for de in self.pathalgo_selection:
+            de.draw()
+        
+        # Constantly updating self.path_data to PathFindingAlgorithms class
+        self.pathfinding_algo.update_path_data(self.path_data)
     
     # Check for user mouse input to obtain specific grid cells
     def check_input(self):
         for event in pygame.event.get():
             mouse_pos = pygame.mouse.get_pos()
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    print("Path passing")
+
+                    for row in self.pathfinding_algo.path_data:
+                        for cell in row:
+                            print(cell, end=" ")
+                        print()
+                    print("-----------------------------", end="\n")
+
+                    print(f"Start: {self.cur_start[0]} {self.cur_start[1]}")
+                    print(f"End: {self.cur_end[0]} {self.cur_end[1]}")
+                    print(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
             
             # Check on single left click button down
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -66,6 +110,7 @@ class GridSystem:
                 self.on_collide_cell(mouse_pos)
                 self.on_click_block(mouse_pos)
                 self.on_click_startend(mouse_pos)
+                self.on_switch_algo(mouse_pos)
 
             # No longer holding on mouse click
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
@@ -73,6 +118,22 @@ class GridSystem:
 
             elif event.type == pygame.MOUSEMOTION and self.mouse_down:
                  self.on_collide_cell(mouse_pos)
+
+    def on_switch_algo(self, mouse_pos):
+        if self.pathalgo_selection[0].rect.collidepoint(mouse_pos):
+            if self.algo_index < 1:
+                self.algo_index = len(self.algo_list)-1
+            else:
+                self.algo_index -= 1            
+
+        elif self.pathalgo_selection[1].rect.collidepoint(mouse_pos):
+            if self.algo_index >= len(self.algo_list)-1:
+                self.algo_index = 0
+            else:
+                self.algo_index += 1
+
+        self.cur_algo = self.algo_list[self.algo_index]
+        self.algo_text_surface = self.algo_font.render(self.cur_algo, True, (0,0,0))
 
     # Upon clicking under block selection ui, switch block placement on grid_system
     def on_click_block(self, mouse_pos):
@@ -119,6 +180,7 @@ class GridSystem:
                             self.prev_start = [cell_row, cell_col]
 
                         self.grids[cell_row][cell_col].update_image(cur)
+                        self.cur_start = [cell_row, cell_col]
 
                     elif self.cur_selected == 3 and self.path_data[cell_row][cell_col] == 0 and self.path_data[cell_row][cell_col] != 3: # End can only be placed on grass
                         cur = self.end_img
@@ -131,14 +193,15 @@ class GridSystem:
                             self.prev_end = [cell_row, cell_col]
 
                         self.grids[cell_row][cell_col].update_image(cur)
+                        self.cur_end = [cell_row, cell_col]
 
                     # Modify path_data for backend
                     self.path_data[cell_row][cell_col] = self.cur_selected
-                    for row in self.path_data:
-                        for cell in row:
-                            print(cell, end=" ")
-                        print()
-                    print("-----------------------------", end="\n")
+                    # for row in self.path_data:
+                    #     for cell in row:
+                    #         print(cell, end=" ")
+                    #     print()
+                    # print("-----------------------------", end="\n")
                 
 class GridCell:
     def __init__(self, x, y, image=None):
