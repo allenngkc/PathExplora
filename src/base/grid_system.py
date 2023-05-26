@@ -41,7 +41,7 @@ class GridSystem:
         for r in range(rows):
             inner_arr = []
             for c in range(cols):
-                inner_arr.append(GridCell(GRID_INIT_X + r*GRID_SIZE,GRID_INIT_Y + c*GRID_SIZE, self.img))
+                inner_arr.append(GridCell(GRID_INIT_X + c*GRID_SIZE,GRID_INIT_Y + r*GRID_SIZE, self.img))
             self.grids.append(inner_arr)    
 
     def display_grids(self):
@@ -133,10 +133,7 @@ class GridSystem:
                         self.grids[cell_row][cell_col].update_image(cur)
 
                     # Modify path_data for backend
-                    print(f"Row: {cell_row}, Col: {cell_col}")
-                    print(f"Val: {self.path_data[cell_row][cell_col]}")
                     self.path_data[cell_row][cell_col] = self.cur_selected
-
                     for row in self.path_data:
                         for cell in row:
                             print(cell, end=" ")
@@ -150,7 +147,7 @@ class GridCell:
         self.surface = pygame.Surface((GRID_SIZE, GRID_SIZE), pygame.SRCALPHA)
         self.rect = self.surface.get_rect(topleft=(x,y))
         self.display_surface = pygame.display.get_surface()
-        
+
         # Each grid defaults to be a empty cell
         if image:
             self.image = image
