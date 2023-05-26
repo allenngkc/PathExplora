@@ -16,6 +16,9 @@ class GridSystem:
         # Selection of blocks for capturign user input
         self.blocks = [Block(143, 538), Block(190, 538)]
 
+        # Choosing the grid to start or end
+        self.start_end = [Block(340, 538), Block(405, 538)]
+
         # Handles and modify path data 
         self.cur_selected = 0 # 0 = grass, 1 = wall
 
@@ -38,6 +41,9 @@ class GridSystem:
 
         for block in self.blocks:
             block.draw()
+
+        for de in self.start_end:
+            de.draw()
     
     # Check for user mouse input to obtain specific grid cells
     def check_input(self):
@@ -49,6 +55,7 @@ class GridSystem:
                 self.mouse_down = True
                 self.on_collide_cell(mouse_pos)
                 self.on_click_block(mouse_pos)
+                self.on_click_startend(mouse_pos)
 
             # No longer holding on mouse click
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
@@ -65,6 +72,12 @@ class GridSystem:
             self.cur_selected = 1
         elif self.blocks[1].rect.collidepoint(mouse_pos):
             self.cur_selected = 0
+
+    def on_click_startend(self, mouse_pos):
+        if self.start_end[0].rect.collidepoint(mouse_pos):
+            print("Checked Start")
+        elif self.start_end[1].rect.collidepoint(mouse_pos):
+            print("Checked End")
         
 
     # On click cell, calculates the specific grid cell by obtaining the mouse position
