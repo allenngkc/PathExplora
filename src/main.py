@@ -14,7 +14,9 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Path Explora")
         self.clock = pygame.time.Clock()
-        self.scene_manager = SceneManager(Pathfinder())
+        self.scene_manager = SceneManager()
+        self.scene_manager.update_scene(Level(self.scene_manager))
+        
         self.display_surface = pygame.display.get_surface()
 
     def run(self):
@@ -34,7 +36,6 @@ class Game:
             pygame.display.update()
             self.scene_manager.render(dt)
             
-
             # Handle cursor movements
             cursor_rect.center = pygame.mouse.get_pos()
             self.display_surface.blit(cursor, cursor_rect)

@@ -3,6 +3,7 @@ from base.sprites import Generic, Decorations, Trees, Mailbox, MailboxTrigger, B
 from player import Player
 from overlay import Overlay
 from settings import *
+from scenes.pathfinder import Pathfinder
 
 # Reading Tiled Map Editor's TMX maps
 from pytmx.util_pygame import load_pygame
@@ -12,15 +13,13 @@ current_dir = os.path.dirname(__file__)
 assets_dir = os.path.join(current_dir, "..\\..\\assets")
 
 class Level:
-    def __init__(self):
+    def __init__(self, scene_manager):
         self.display_surface = pygame.display.get_surface()
         self.all_sprites = CameraGroup()
         self.collision_sprites = pygame.sprite.Group()
+        self.scene_manager = scene_manager
         self.setup()
-        # self.overlay = Overlay(self.player)
-
         
-
     def setup(self):
         # 3D world data
         tmx_data = load_pygame(os.path.join(assets_dir, 'world\\data\\map.tmx'))
@@ -88,6 +87,11 @@ class Level:
 
         self.ui_sprites.customize_draw(self.player)
         self.ui_sprites.update(dt)
+
+        # TEMP FOR TRANSITIONING SCENE
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_p]:
+            self.scene_manager.update_scene(Pathfinder())
 
         # self.overlay.display()
 
