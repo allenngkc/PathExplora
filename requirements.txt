@@ -1,0 +1,7 @@
+guizero==1.4.0
+numpy==1.24.1
+pgzero==1.2.1
+psutil==5.9.3
+pygame==2.1.2
+PyTMX==3.31
+pyzero==0.1
