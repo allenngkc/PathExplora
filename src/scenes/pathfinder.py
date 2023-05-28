@@ -55,6 +55,8 @@ class Pathfinder:
         self.draw_grid() 
         self.overlay.update()
         self.grid_system.draw_algo_text()
+        
+        self.grid_system.check_visual_path()
 
     # Draw gridlines to user
     def draw_grid(self):

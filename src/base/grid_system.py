@@ -3,6 +3,7 @@ from pygame import Color
 from overlay import Block
 from settings import *
 from pathfinding_algo import PathfindingAlgorithms
+import time
 
 
 # Obtain file system directories
@@ -62,6 +63,11 @@ class GridSystem:
 
         self.pathfinding_algo = PathfindingAlgorithms(self.path_data)
 
+        self.last = pygame.time.get_ticks()
+        self.cooldown = 50
+
+        self.available_path = []
+
     # This needs a independent function due to rendering order issues
     def draw_algo_text(self):
         self.display_surface.blit(self.algo_text_surface, (666,542))
@@ -84,6 +90,84 @@ class GridSystem:
         
         # Constantly updating self.path_data to PathFindingAlgorithms class
         self.pathfinding_algo.update_path_data(self.path_data)
+
+    """
+    This function solves the problem of pygame.time.delay or time.wait not working as intended, The function
+    Should be reflecting the visual of the pathfinding algorithm search the path tile by tile. If time.delay
+    Or time.wait is used. The whole event loop for display_grids() and run function in pathfinder.py will halt
+    Untill the delay is done, which destroys the event loop. Thus the application will become unresponsive and
+    The tiles will show all at once by passing self.available_path from self.display_path(). This workaround is
+    Able to visualize the tiles with a desired cooldown by checking the current tick and comparing it to last
+    Operation.
+
+    @reflex_path is for better visuals. For second layering the path visualization   
+    """
+    def check_visual_path(self):
+        if self.available_path == []:
+            return
+        else:
+            reflex_path = self.available_path
+
+            while self.available_path:
+                now = pygame.time.get_ticks()
+                if now - self.last >= self.cooldown:
+                    self.last = now
+
+                    node = self.available_path.pop()
+                    self.display_tile(node)
+                else:
+                    break
+                
+
+    # Converts the path_data to front end and displays visuals to user
+    def display_path(self, path):
+        path.reverse()
+        self.available_path = path
+
+        # tot_path = len(path)-1
+        # cur_index = 0
+
+        # newSur = pygame.Surface((GRID_SIZE, GRID_SIZE), pygame.SRCALPHA)
+        # newSur.blit(self.start_img, (0,0))
+        # newSur.fill(Color(0,0,0,0))
+
+        # for node in path:
+        #     r = node[0]
+        #     c = node[1]
+
+        #     self.path_data[r][c] = 4
+        #     print("Bliting")
+            
+        #     self.display_surface.blit(newSur, (GRID_INIT_X + c*GRID_SIZE, GRID_INIT_Y + r*GRID_SIZE))
+
+        #     time.sleep(0.1)
+        
+        # while cur_index <= tot_path:
+        #     now = pygame.time.get_ticks()
+        #     print(".")
+        #     if now - self.last >= self.cooldown:
+        #         print("Draw")
+
+        #         cur_tile = path[cur_index]
+        #         r = cur_tile[0]
+        #         c = cur_tile[1]
+
+        #         self.path_data[r][c] = 4
+        #         self.display_surface.blit(newSur, (GRID_INIT_X + c*GRID_SIZE, GRID_INIT_Y + r*GRID_SIZE))
+
+        #         self.last = now
+        #         cur_index += 1
+            
+                
+                
+    # Update image on desired tile
+    def display_tile(self, node):
+        r = node[0]
+        c = node[1]
+        self.path_data[r][c] = 4 # setting tile to 4 indicates it as part of destination
+        self.grids[r][c].update_image(self.start_img)
+            
+            
     
     # Check for user mouse input to obtain specific grid cells
     def check_input(self):
@@ -103,6 +187,7 @@ class GridSystem:
                     print(f"Start: {self.cur_start[0]} {self.cur_start[1]}")
                     print(f"End: {self.cur_end[0]} {self.cur_end[1]}")
                     print(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
+                    self.display_path(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
             
             # Check on single left click button down
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
