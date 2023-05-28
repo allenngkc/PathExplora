@@ -190,16 +190,19 @@ class GridSystem:
                     self.display_path(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
             
             # Check on single left click button down
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                self.mouse_down = True
-                self.on_collide_cell(mouse_pos)
-                self.on_click_block(mouse_pos)
-                self.on_click_startend(mouse_pos)
-                self.on_switch_algo(mouse_pos)
-
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    print("hodling down")
+                    self.mouse_down = True
+                    self.on_collide_cell(mouse_pos)
+                    self.on_click_block(mouse_pos)
+                    self.on_click_startend(mouse_pos)
+                    self.on_switch_algo(mouse_pos)
             # No longer holding on mouse click
-            elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                self.mouse_down = False
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    print("up")
+                    self.mouse_down = False
 
             elif event.type == pygame.MOUSEMOTION and self.mouse_down:
                  self.on_collide_cell(mouse_pos)

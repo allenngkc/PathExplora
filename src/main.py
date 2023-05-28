@@ -28,10 +28,10 @@ class Game:
         cursor_rect = cursor.get_rect()
 
         while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+            # for event in pygame.event.get():
+            #     if event.type == pygame.QUIT:
+            #         pygame.quit()
+            #         sys.exit()
 
             dt = self.clock.tick() / 1000
             pygame.display.update()
