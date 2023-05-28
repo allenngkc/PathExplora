@@ -1,10 +1,9 @@
-import pygame, os
+import pygame, os, sys
 from pygame import Color
 from overlay import Block
 from settings import *
 from pathfinding_algo import PathfindingAlgorithms
 import time
-
 
 # Obtain file system directories
 current_dir = os.path.dirname(__file__)
@@ -66,7 +65,12 @@ class GridSystem:
         self.last = pygame.time.get_ticks()
         self.cooldown = 50
 
+        # Dynamic array, constantly being updated
         self.available_path = []
+
+        # Second laying shortest path mechanism
+        self.second_laying = False
+        self.reflex_path = [] # Dynamic array
 
     # This needs a independent function due to rendering order issues
     def draw_algo_text(self):
@@ -104,17 +108,33 @@ class GridSystem:
     """
     def check_visual_path(self):
         if self.available_path == []:
-            return
+            if self.second_laying:
+                while self.reflex_path:
+                    now = pygame.time.get_ticks()
+                    if now - self.last >= 35: # Should add CONSTANT here
+                        self.last = now
+                        node = self.reflex_path.pop()
+                        self.display_tile(node, self.end_img)
+                    else:
+                        break
+                if len(self.reflex_path) == 0:
+                    self.second_laying = False
+            else:
+                return
         else:
-            reflex_path = self.available_path
-
             while self.available_path:
                 now = pygame.time.get_ticks()
                 if now - self.last >= self.cooldown:
                     self.last = now
 
                     node = self.available_path.pop()
-                    self.display_tile(node)
+                    self.display_tile(node, self.start_img)
+
+                    if len(self.available_path) == 0:
+                        self.reflex_path = self.pathfinding_algo.shortest_path(self.cur_start, self.cur_end)
+                        self.reflex_path.reverse()
+                        self.second_laying = True
+
                 else:
                     break
                 
@@ -161,11 +181,11 @@ class GridSystem:
                 
                 
     # Update image on desired tile
-    def display_tile(self, node):
+    def display_tile(self, node, tile):
         r = node[0]
         c = node[1]
         self.path_data[r][c] = 4 # setting tile to 4 indicates it as part of destination
-        self.grids[r][c].update_image(self.start_img)
+        self.grids[r][c].update_image(tile)
             
             
     
@@ -176,23 +196,20 @@ class GridSystem:
             
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    print("Path passing")
-
+                    print(f"Start: {self.cur_start[0]} {self.cur_start[1]}")
+                    print(f"End: {self.cur_end[0]} {self.cur_end[1]}")
+                    print(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
                     for row in self.pathfinding_algo.path_data:
                         for cell in row:
                             print(cell, end=" ")
                         print()
                     print("-----------------------------", end="\n")
-
-                    print(f"Start: {self.cur_start[0]} {self.cur_start[1]}")
-                    print(f"End: {self.cur_end[0]} {self.cur_end[1]}")
-                    print(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
                     self.display_path(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
+                    
             
             # Check on single left click button down
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    print("hodling down")
                     self.mouse_down = True
                     self.on_collide_cell(mouse_pos)
                     self.on_click_block(mouse_pos)
@@ -201,7 +218,6 @@ class GridSystem:
             # No longer holding on mouse click
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
-                    print("up")
                     self.mouse_down = False
 
             elif event.type == pygame.MOUSEMOTION and self.mouse_down:
@@ -285,11 +301,7 @@ class GridSystem:
 
                     # Modify path_data for backend
                     self.path_data[cell_row][cell_col] = self.cur_selected
-                    # for row in self.path_data:
-                    #     for cell in row:
-                    #         print(cell, end=" ")
-                    #     print()
-                    # print("-----------------------------", end="\n")
+
                 
 class GridCell:
     def __init__(self, x, y, image=None):
