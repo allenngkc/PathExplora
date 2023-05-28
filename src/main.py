@@ -16,6 +16,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.scene_manager = SceneManager()
         self.scene_manager.update_scene(Level(self.scene_manager))
+        self.scene_manager.update_scene(Pathfinder())
         
         self.display_surface = pygame.display.get_surface()
 

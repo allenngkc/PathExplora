@@ -12,15 +12,22 @@ class Overlay:
         self.selection_ui = pygame.image.load(os.path.join(assets_dir, 'ui\\selection.png')).convert_alpha()
         self.startend_ui = pygame.image.load(os.path.join(assets_dir, 'ui\\startend.png')).convert_alpha()
         self.path_selection_ui = pygame.image.load(os.path.join(assets_dir, 'ui\\path_selection.png')).convert_alpha()
+        self.current_block = pygame.image.load(os.path.join(assets_dir, 'ui\\current_block.png')).convert_alpha()
 
     def display(self):
         self.display_surface.blit(self.selection_ui, (-50,350))
         self.display_surface.blit(self.startend_ui, (230,352))
         self.display_surface.blit(self.path_selection_ui, (475, 485))
+        self.display_surface.blit(self.current_block, (25, 525))
 
 
     def update(self):
          self.display()
+
+    def update_current_block(self, current_img):
+        self.current_block.blit(current_img, (16,16))
+            
+
 
 """
 This class represents the blocks that are avaiable for the user to place, right now

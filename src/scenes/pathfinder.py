@@ -15,6 +15,13 @@ class Pathfinder:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
         self.all_sprites = WorldGroup()
+
+        # Current available blocks
+        self.grass_img = pygame.transform.scale(pygame.image.load(os.path.join(assets_dir, 'ui\\grass.png')).convert_alpha(), (30,30))
+        self.wall_img = pygame.transform.scale(pygame.image.load(os.path.join(assets_dir, 'pathfinder\\Graphics\\bush.png')).convert_alpha(), (30,30))
+        self.start_img = pygame.transform.scale(pygame.image.load(os.path.join(assets_dir, 'ui\\soil.png')).convert_alpha(),(30,30))
+        self.end_img = pygame.transform.scale(pygame.image.load(os.path.join(assets_dir, 'ui\\stone.png')).convert_alpha(),(30,30))
+
         self.setup()
 
     def setup(self):
@@ -52,10 +59,14 @@ class Pathfinder:
         self.all_sprites.update(dt)   
         self.grid_system.display_grids()
         self.grid_system.check_input()
+
+        self.check_block_selection()
+
         self.draw_grid() 
         self.overlay.update()
         self.grid_system.draw_algo_text()
         
+        # Check function comments in grid_system.py
         self.grid_system.check_visual_path()
 
     # Draw gridlines to user
@@ -65,6 +76,17 @@ class Pathfinder:
             for y in range(30, 510, blockSize):
                 rect = pygame.Rect(x, y, blockSize, blockSize)
                 pygame.draw.rect(self.display_surface, (255, 255, 255), rect, 1)
+    
+    # Exists in event loop, constantly check for block selection and display to user
+    def check_block_selection(self):
+        if self.grid_system.cur_selected == 0:
+            self.overlay.update_current_block(self.grass_img)
+        elif self.grid_system.cur_selected == 1:
+            self.overlay.update_current_block(self.wall_img)
+        elif self.grid_system.cur_selected == 2:
+            self.overlay.update_current_block(self.start_img)
+        elif self.grid_system.cur_selected == 3:
+            self.overlay.update_current_block(self.end_img)
 
 class WorldGroup(pygame.sprite.Group):
     def __init__(self):
