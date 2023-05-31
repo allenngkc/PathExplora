@@ -31,7 +31,13 @@ class PathfindingAlgorithms:
                     if neighbor not in self.visited and self.path_data[neighbor[0]][neighbor[1]] != 1:
                         stack.append([neighbor, path + [neighbor]])
             
-        print("NO PATH")
+        print("NO PATH") # TODO handle if user decided to try mess up the program
+
+    def bfs(self, start, end):
+        self.visited.clear()
+        self.path.clear()
+
+        
 
     # For second layering, finding the shortest path with BFS iteratively 
     def shortest_path(self, start, end):
@@ -63,6 +69,7 @@ class PathfindingAlgorithms:
 
         return None
 
+    # Returns the neighbours of node given within self.path_data, global function
     def get_neighbours(self, node):
         neighbours = []
         directions = [[0, 1], [0, -1], [1, 0], [-1, 0]]

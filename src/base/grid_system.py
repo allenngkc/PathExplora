@@ -23,6 +23,10 @@ class GridSystem:
         self.start_img = pygame.image.load(os.path.join(assets_dir, 'ui\\soiltile.png')).convert_alpha()
         self.end_img = pygame.image.load(os.path.join(assets_dir, 'ui\\stonetile.png')).convert_alpha()
 
+        # Buttons for resetting the level or path only
+        self.resetall_img = pygame.image.load(os.path.join(assets_dir, 'ui\\resetall.png')).convert_alpha()
+        self.resetpath_img = pygame.image.load(os.path.join(assets_dir, 'ui\\resetpath.png')).convert_alpha()
+
         # Choosing the grid to start or end
         self.start_end = [Block(340, 538), Block(405, 538)]
 
@@ -49,7 +53,8 @@ class GridSystem:
                 inner_arr.append(GridCell(GRID_INIT_X + c*GRID_SIZE,GRID_INIT_Y + r*GRID_SIZE, self.img))
             self.grids.append(inner_arr)    
 
-        # Path finding mechanism
+        # Path finding mechanisms
+
         self.pathalgo_selection = [Block(610, 538), Block(735, 538)]
 
         self.algo_index = 0
