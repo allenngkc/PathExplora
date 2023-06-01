@@ -209,7 +209,16 @@ class GridSystem:
                             print(cell, end=" ")
                         print()
                     print("-----------------------------", end="\n")
-                    self.display_path(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
+                    print(self.cur_algo)
+
+                    # if self.cur_algo == 'BFS':
+                    #     self.display_path(self.pathfinding_algo.bfs(self.cur_start, self.cur_end))
+                    # elif self.cur_algo == 'DFS':
+                    #     self.display_path(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
+
+                    self.display_path(self.pathfinding_algo.dijkstra(self.cur_start, self.cur_end))
+
+                    # self.display_path(self.pathfinding_algo.bfs(self.cur_start, self.cur_end))
                     
             
             # Check on single left click button down

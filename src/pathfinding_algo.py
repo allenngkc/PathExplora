@@ -1,4 +1,5 @@
 from collections import deque
+from heapq import heappop, heappush
 
 class PathfindingAlgorithms:
     def __init__(self, path_data):
@@ -37,6 +38,64 @@ class PathfindingAlgorithms:
         self.visited.clear()
         self.path.clear()
 
+        queue = deque([(start, [start])])
+        visited_nodes = []  # List to store all visited nodes
+
+        while queue:
+            node, path = queue.popleft()
+
+            if node not in self.visited:
+                self.visited.append(node)
+                visited_nodes.append(node)
+
+                if node == end:
+                    self.path = path
+                    return visited_nodes  # Return all visited nodes
+
+                neighbors = self.get_neighbours(node)
+                for neighbor in neighbors:
+                    if neighbor not in self.visited and self.path_data[neighbor[0]][neighbor[1]] != 1:
+                        queue.append((neighbor, path + [neighbor]))
+
+        print("NO PATH")
+
+    def dijkstra(self, start, end):
+        self.visited.clear()
+        self.path.clear()
+
+        start = tuple(start)
+        end = tuple(end)
+        distances = {start: 0}
+        previous = {}
+        queue = [(0, start)]
+
+        while queue:
+            current_distance, current_node = heappop(queue)
+
+            if current_node not in self.visited:
+                self.visited.append(current_node)
+
+                if current_node == end:
+                    # Reconstruct the path from end to start
+                    node = end
+                    while node in previous:
+                        self.path.append(list(node))
+                        node = previous[node]
+                    self.path.append(list(start))
+                    self.path.reverse()
+                    return self.path
+
+                neighbors = self.get_neighbours(list(current_node))
+                for neighbor in neighbors:
+                    neighbor = tuple(neighbor)
+                    if neighbor not in self.visited and self.path_data[neighbor[0]][neighbor[1]] != 1:
+                        distance = current_distance + 1  # Assuming unit weight
+                        if neighbor not in distances or distance < distances[neighbor]:
+                            distances[neighbor] = distance
+                            previous[neighbor] = current_node
+                            heappush(queue, (distance, neighbor))
+
+        print("NO PATH")
         
 
     # For second layering, finding the shortest path with BFS iteratively 
@@ -67,6 +126,7 @@ class PathfindingAlgorithms:
                 for neighbor in nei:
                     queue.append((neighbor, list(path)))  # Create a copy of the current path
 
+        print("Cant find any")
         return None
 
     # Returns the neighbours of node given within self.path_data, global function
