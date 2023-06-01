@@ -27,6 +27,8 @@ class GridSystem:
         self.resetall_img = pygame.image.load(os.path.join(assets_dir, 'ui\\resetall.png')).convert_alpha()
         self.resetpath_img = pygame.image.load(os.path.join(assets_dir, 'ui\\resetpath.png')).convert_alpha()
 
+        self.resetpath_block = Block(815, 150, xsize=180, ysize=48)
+
         # Choosing the grid to start or end
         self.start_end = [Block(340, 538), Block(405, 538)]
 
@@ -211,14 +213,11 @@ class GridSystem:
                     print("-----------------------------", end="\n")
                     print(self.cur_algo)
 
-                    # if self.cur_algo == 'BFS':
-                    #     self.display_path(self.pathfinding_algo.bfs(self.cur_start, self.cur_end))
-                    # elif self.cur_algo == 'DFS':
-                    #     self.display_path(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
+                    if self.cur_algo == 'BFS':
+                        self.display_path(self.pathfinding_algo.bfs(self.cur_start, self.cur_end))
+                    elif self.cur_algo == 'DFS':
+                        self.display_path(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
 
-                    self.display_path(self.pathfinding_algo.dijkstra(self.cur_start, self.cur_end))
-
-                    # self.display_path(self.pathfinding_algo.bfs(self.cur_start, self.cur_end))
                     
             
             # Check on single left click button down
@@ -229,6 +228,7 @@ class GridSystem:
                     self.on_click_block(mouse_pos)
                     self.on_click_startend(mouse_pos)
                     self.on_switch_algo(mouse_pos)
+                    self.on_click_resetpath(mouse_pos)
             # No longer holding on mouse click
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
@@ -267,8 +267,29 @@ class GridSystem:
             self.cur_selected = 2
         elif self.start_end[1].rect.collidepoint(mouse_pos):
             self.cur_selected = 3
-        
+    
+    # Reset all the path visuals but keeping self_path_data
+    def on_click_resetpath(self, mouse_pos):
+        if self.resetpath_block.rect.collidepoint(mouse_pos):
+            print("clicked")
+            for row in range(len(self.grids)):
+                for col in range(len(self.grids[row])):
+                    # Reset path
+                    if [row,col] != self.cur_start:
+                        self.grids[row][col].update_image(self.grass_img)     
+                    else:
+                        self.grids[row][col].update_image(self.start_img)
 
+                    # Redraw end cell
+                    if [row,col] == self.cur_end:
+                        self.grids[row][col].update_image(self.end_img)
+
+                    # Redraw grid cell with wall if self.path_data[row][col] is a wall
+                    if self.path_data[row][col] == 1:
+                        self.grids[row][col].update_image(self.wall_img)
+
+                    if self.path_data[row][col] == 3 or self.path_data[row][col] == 4:
+                        self.path_data[row][col] = 0
     # On click cell, calculates the specific grid cell by obtaining the mouse position
     def on_collide_cell(self, mouse_pos):
         for row in self.grids:

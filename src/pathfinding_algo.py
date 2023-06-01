@@ -57,46 +57,7 @@ class PathfindingAlgorithms:
                     if neighbor not in self.visited and self.path_data[neighbor[0]][neighbor[1]] != 1:
                         queue.append((neighbor, path + [neighbor]))
 
-        print("NO PATH")
-
-    def dijkstra(self, start, end):
-        self.visited.clear()
-        self.path.clear()
-
-        start = tuple(start)
-        end = tuple(end)
-        distances = {start: 0}
-        previous = {}
-        queue = [(0, start)]
-
-        while queue:
-            current_distance, current_node = heappop(queue)
-
-            if current_node not in self.visited:
-                self.visited.append(current_node)
-
-                if current_node == end:
-                    # Reconstruct the path from end to start
-                    node = end
-                    while node in previous:
-                        self.path.append(list(node))
-                        node = previous[node]
-                    self.path.append(list(start))
-                    self.path.reverse()
-                    return self.path
-
-                neighbors = self.get_neighbours(list(current_node))
-                for neighbor in neighbors:
-                    neighbor = tuple(neighbor)
-                    if neighbor not in self.visited and self.path_data[neighbor[0]][neighbor[1]] != 1:
-                        distance = current_distance + 1  # Assuming unit weight
-                        if neighbor not in distances or distance < distances[neighbor]:
-                            distances[neighbor] = distance
-                            previous[neighbor] = current_node
-                            heappush(queue, (distance, neighbor))
-
-        print("NO PATH")
-        
+        print("NO PATH") # TODO handle if user decided to try mess up the program
 
     # For second layering, finding the shortest path with BFS iteratively 
     def shortest_path(self, start, end):
