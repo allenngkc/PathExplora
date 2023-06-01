@@ -28,6 +28,7 @@ class GridSystem:
         self.resetpath_img = pygame.image.load(os.path.join(assets_dir, 'ui\\resetpath.png')).convert_alpha()
 
         self.resetpath_block = Block(815, 150, xsize=180, ysize=48)
+        self.reset_block = Block(815, 225, xsize=120, ysize=48)
 
         # Choosing the grid to start or end
         self.start_end = [Block(340, 538), Block(405, 538)]
@@ -229,6 +230,7 @@ class GridSystem:
                     self.on_click_startend(mouse_pos)
                     self.on_switch_algo(mouse_pos)
                     self.on_click_resetpath(mouse_pos)
+                    self.on_click_resetall(mouse_pos)
             # No longer holding on mouse click
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
@@ -271,7 +273,6 @@ class GridSystem:
     # Reset all the path visuals but keeping self_path_data
     def on_click_resetpath(self, mouse_pos):
         if self.resetpath_block.rect.collidepoint(mouse_pos):
-            print("clicked")
             for row in range(len(self.grids)):
                 for col in range(len(self.grids[row])):
                     # Reset path
@@ -290,6 +291,23 @@ class GridSystem:
 
                     if self.path_data[row][col] == 3 or self.path_data[row][col] == 4:
                         self.path_data[row][col] = 0
+    
+    def on_click_resetall(self, mouse_pos):
+        if self.reset_block.rect.collidepoint(mouse_pos):
+            for row in range(len(self.grids)):
+                for col in range(len(self.grids[row])):
+                    if [row, col] == self.cur_start:
+                        self.grids[row][col].update_image(self.start_img)
+
+                    if [row,col] == self.cur_end:
+                        self.grids[row][col].update_image(self.end_img)
+
+                    if [row,col]  != self.cur_end and [row,col] != self.cur_start:
+                        self.grids[row][col].update_image(self.grass_img)
+                    
+                    if self.path_data[row][col] == 3 or self.path_data[row][col] == 4 or self.path_data[row][col] == 1:
+                        self.path_data[row][col] = 0
+    
     # On click cell, calculates the specific grid cell by obtaining the mouse position
     def on_collide_cell(self, mouse_pos):
         for row in self.grids:

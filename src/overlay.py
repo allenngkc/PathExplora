@@ -22,6 +22,7 @@ class Overlay:
         self.display_surface.blit(self.path_selection_ui, (475, 485))
         self.display_surface.blit(self.current_block, (25, 525))
         self.display_surface.blit(self.resetpath_img, (800, 50))
+        self.display_surface.blit(self.resetall_img, (800, 125))
 
 
     def update(self):
