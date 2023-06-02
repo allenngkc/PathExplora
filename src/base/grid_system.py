@@ -15,6 +15,9 @@ class GridSystem:
         self.img = pygame.image.load(os.path.join(assets_dir, 'ui\\grasstile.png')).convert_alpha()
         self.mouse_down = False
 
+        # Obtain all user events from main.py
+        self.events = None
+
         # Selection of blocks for capturign user input
         self.blocks = [Block(143, 538), Block(190, 538)]
 
@@ -199,7 +202,7 @@ class GridSystem:
     
     # Check for user mouse input to obtain specific grid cells
     def check_input(self):
-        for event in pygame.event.get():
+        for event in self.events:
             mouse_pos = pygame.mouse.get_pos()
             
             if event.type == pygame.KEYDOWN:
@@ -217,6 +220,7 @@ class GridSystem:
                     if self.cur_algo == 'BFS':
                         self.display_path(self.pathfinding_algo.bfs(self.cur_start, self.cur_end))
                     elif self.cur_algo == 'DFS':
+                        print(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
                         self.display_path(self.pathfinding_algo.dfs(self.cur_start, self.cur_end))
 
                     

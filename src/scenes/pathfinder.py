@@ -13,6 +13,8 @@ assets_dir = os.path.join(current_dir, "..\\..\\assets")
 
 class Pathfinder:
     def __init__(self):
+        self.name = 'pathfinder' # idenitfier
+
         self.display_surface = pygame.display.get_surface()
         self.all_sprites = WorldGroup()
 

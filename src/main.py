@@ -16,8 +16,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.scene_manager = SceneManager()
         self.scene_manager.update_scene(Level(self.scene_manager))
-        self.scene_manager.update_scene(Pathfinder())
-        
+
         self.display_surface = pygame.display.get_surface()
 
     def run(self):
@@ -28,14 +27,17 @@ class Game:
         cursor_rect = cursor.get_rect()
 
         while True:
-            # for event in pygame.event.get():
-            #     if event.type == pygame.QUIT:
-            #         pygame.quit()
-            #         sys.exit()
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
             dt = self.clock.tick() / 1000
             pygame.display.update()
-            self.scene_manager.render(dt)
+            if self.scene_manager.get_scene().name == 'pathfinder':
+                self.scene_manager.get_scene().grid_system.events = events
+            self.scene_manager.render(dt)   
             
             # Handle cursor movements
             cursor_rect.center = pygame.mouse.get_pos()

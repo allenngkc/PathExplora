@@ -9,3 +9,6 @@ class SceneManager:
 
     def update_scene(self, scene):
         self.cur_scene = scene
+
+    def get_scene(self):
+        return self.cur_scene

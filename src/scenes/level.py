@@ -14,10 +14,13 @@ assets_dir = os.path.join(current_dir, "..\\..\\assets")
 
 class Level:
     def __init__(self, scene_manager):
+        self.name = 'level' # Idenifiter
+
         self.display_surface = pygame.display.get_surface()
         self.all_sprites = CameraGroup()
         self.collision_sprites = pygame.sprite.Group()
         self.scene_manager = scene_manager
+        self.events = None
         self.setup()
         
     def setup(self):
