@@ -10,9 +10,9 @@ This should where you first end up in the lobby, **click p to enter pathfinder s
 
 ![Lobby](lobby.gif)
 
-
 ### PathFinder
 ![PathFinder](pathfinder.gif)
+![Path](path.gif)
 
 
 
